@@ -13,5 +13,8 @@ model_path = hf_hub_download(
 
 model = joblib.load(model_path)
 
-# prediction
-prediction = model.predict(X_new ) 
+ # features extraction 
+# X_new = feature_extractio(data_url ) 
+
+ # prediction
+# prediction = model.predict(X_new ) 
