@@ -117,7 +117,10 @@ def prediction(request):
           print('Model Fails')
     except Exception as e:
         print('404!!, URL NOT FOUND')
-
+  else:
+      return JsonResponse({
+          "error": "Only POST request allowed"
+      }, status=405)
     
 
 # url = 'https://github.com/features/actions'
