@@ -99,11 +99,11 @@ def prediction(request):
     try:
         url = url_dict['url']
         extracted_features = extract_features(url)
-        print(extracted_features)
-
+        if "https" in extracted_features:
+          del extracted_features["https"]
+        data = pd.DataFrame([extracted_features])
         try:
-          model_predicition = model.predict(extracted_features)
-          print(model_predicition[0])
+          model_predicition = model.predict(data)
           if model_predicition[0] == 1:
             result = 'Phishing'
           else:
@@ -120,16 +120,15 @@ def prediction(request):
 
     
 
-url = 'https://github.com/features/actions'
-extracted_features = extract_features(url)
-print(extracted_features)
-
-data = pd.DataFrame([extracted_features])
-
-try:
-  model_predicition = model.predict(data)
-  print(model_predicition[0])
-  if model_predicition[0] == 1:
-    result = 'Phishing'
-  else:
-    result = 'Legitimate'
+# url = 'https://github.com/features/actions'
+# extracted_features = extract_features(url)
+# print(extracted_features)
+# del extracted_features["https"]
+# data = pd.DataFrame([extracted_features])
+# model_predicition = model.predict(data)
+# print(data)
+# print(model_predicition[0])
+# if model_predicition[0] == 1:
+#   result = 'Phishing'
+# else:
+#   result = 'Legitimate'
