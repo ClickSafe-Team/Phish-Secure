@@ -13,3 +13,6 @@ __pycache__/
 
 # ML models
 *.pkl
+
+# venv 
+venv
