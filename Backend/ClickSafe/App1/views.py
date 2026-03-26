@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.shortcuts import render
 import json
 import pandas as pd
 import numpy as np
@@ -92,6 +93,9 @@ model_path = hf_hub_download(
 )
 
 model = joblib.load(model_path)
+
+def predict_page(request):
+  return render(request, 'app1/predict.html')
 
 def prediction(request):
     if request.method == 'POST':

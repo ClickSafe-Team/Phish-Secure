@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Understanding URLs- Phishing vs Legitimate</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      color: #1a1d23;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #fff;
+      border-bottom: 1px solid #e2e6ef;
+      padding: 1.2rem 2rem;
+      text-align: center;
+    }
+    header h1 { font-size: 1.4rem; font-weight: 700; color: #1a1d23; }
+    header p  { font-size: 0.88rem; color: #6b7280; margin-top: 0.2rem; }
+
+    main {
+      max-width: 860px;
+      margin: 2.5rem auto;
+      padding: 0 1.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: #fff;
+      border: 1px solid #e2e6ef;
+      border-radius: 12px;
+      padding: 2rem;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card p {
+      font-size: 0.92rem;
+      color: #374151;
+      line-height: 1.75;
+    }
+
+    /* ── URL ANATOMY ── */
+    .url-anatomy {
+      background: #f0f4ff;
+      border: 1px solid #c7d5ff;
+      border-radius: 8px;
+      padding: 1rem 1.4rem;
+      margin-top: 1.2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .url-anatomy span { padding: 2px 4px; border-radius: 4px; }
+    .s  { background: #d1fae5; color: #065f46; }
+    .d  { background: #dbeafe; color: #1e40af; }
+    .p  { background: #fef3c7; color: #92400e; }
+    .pa { background: #f3e8ff; color: #6b21a8; }
+
+    .url-legend {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      margin-top: 0.8rem;
+    }
+    .leg { font-size: 0.76rem; display: flex; align-items: center; gap: 0.3rem; }
+    .dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+
+    /* ── TWO COLUMN ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .legit-card { border-color: #6ee7b7; border-left: 4px solid #10b981; }
+    .legit-card .card-title { color: #065f46; }
+
+    .phish-card { border-color: #fca5a5; border-left: 4px solid #ef4444; }
+    .phish-card .card-title { color: #991b1b; }
+
+    /* ── URL EXAMPLES LIST ── */
+    .url-list {
+      display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1rem;
+    }
+    .url-item {
+      display: flex; flex-direction: column; gap: 0.2rem;
+      background: #f9fafb; border: 1px solid #e5e7eb;
+      border-radius: 8px; padding: 0.7rem 0.9rem;
+    }
+    .url-item code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem; word-break: break-all;
+    }
+    .url-item.legit code { color: #065f46; }
+    .url-item.phish code { color: #b91c1c; }
+    .url-item .reason { font-size: 0.75rem; color: #6b7280; }
+
+    /* ── TIPS ── */
+    .tips-list { display: flex; flex-direction: column; gap: 0.7rem; margin-top: 1rem; }
+    .tip { display: flex; gap: 0.8rem; align-items: flex-start; font-size: 0.88rem; color: #374151; }
+    .tip-icon {
+      min-width: 26px; height: 26px; background: #eff6ff;
+      border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
+    }
+
+    /* ── TABLE ── */
+    table { width: 100%; border-collapse: collapse; margin-top: 1.2rem; font-size: 0.87rem; }
+    th {
+      text-align: left; padding: 0.7rem 1rem;
+      background: #f3f4f6; color: #374151; font-weight: 600; border-bottom: 2px solid #e5e7eb;
+    }
+    td { padding: 0.65rem 1rem; border-bottom: 1px solid #f0f0f0; color: #374151; vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    .tag { display: inline-block; font-size: 0.7rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+    .tag.safe { background: #d1fae5; color: #065f46; }
+    .tag.warn { background: #fee2e2; color: #991b1b; }
+
+    footer {
+      text-align: center; font-size: 0.78rem; color: #9ca3af;
+      padding: 2rem; border-top: 1px solid #e5e7eb;
+    }
+
+    @media (max-width: 600px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Understanding URLs: Legitimate vs Phishing</h1>
+  <p>A simple guide to identifying safe and malicious web addresses</p>
+</header>
+
+<main>
+
+  <!-- WHAT IS A URL -->
+  <div class="card">
+    <div class="card-title">What is a URL?</div>
+    <p>
+      A <strong>URL (Uniform Resource Locator)</strong> is the web address you type or click to visit a website.
+      Every URL has distinct parts — understanding them helps you quickly spot whether a link is safe or dangerous.
+    </p>
+    <div class="url-anatomy">
+      <span class="s">https://</span><span class="d">www.example.com</span><span class="p">/account</span><span class="pa">?id=123</span>
+    </div>
+    <div class="url-legend">
+      <div class="leg"><span class="dot" style="background:#d1fae5;"></span> Protocol (https)</div>
+      <div class="leg"><span class="dot" style="background:#dbeafe;"></span> Domain name</div>
+      <div class="leg"><span class="dot" style="background:#fef3c7;"></span> Path</div>
+      <div class="leg"><span class="dot" style="background:#f3e8ff;"></span> Query parameters</div>
+    </div>
+  </div>
+
+  <!-- LEGIT + PHISH SIDE BY SIDE -->
+  <div class="two-col">
+
+    <div class="card legit-card">
+      <div class="card-title">Legitimate URLs</div>
+      <p>
+        Legitimate URLs come from trusted, recognizable sources. They use correct spelling, HTTPS,
+        and a clean domain that matches the real organization — nothing extra, nothing suspicious.
+      </p>
+      <div class="url-list">
+        <div class="url-item legit">
+          <code>https://www.google.com/search</code>
+          <span class="reason">✓ Known brand, HTTPS, simple domain</span>
+        </div>
+        <div class="url-item legit">
+          <code>https://paypal.com/signin</code>
+          <span class="reason">✓ Exact brand domain, no extra words</span>
+        </div>
+        <div class="url-item legit">
+          <code>https://amazon.com/orders</code>
+          <span class="reason">✓ Official domain, no suspicious subdomains</span>
+        </div>
+        <div class="url-item legit">
+          <code>https://mail.google.com/inbox</code>
+          <span class="reason">✓ Official subdomain of google.com</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card phish-card">
+      <div class="card-title"> Phishing URLs</div>
+      <p>
+        Phishing URLs are crafted to <em>look</em> like real sites but trick you into giving up passwords
+        or installing malware. They often misspell domains or hide the real brand name inside a fake one.
+      </p>
+      <div class="url-list">
+        <div class="url-item phish">
+          <code>http://google.com.login-verify.net/</code>
+          <span class="reason">✗ Real domain is login-verify.net, not google.com</span>
+        </div>
+        <div class="url-item phish">
+          <code>https://paypa1.com/secure-login</code>
+          <span class="reason">✗ "l" replaced with "1" — typosquatting</span>
+        </div>
+        <div class="url-item phish">
+          <code>http://amaz0n-account-update.com</code>
+          <span class="reason">✗ HTTP only, fake domain with hyphens & zero</span>
+        </div>
+        <div class="url-item phish">
+          <code>https://secure-gmail-login.xyz/auth</code>
+          <span class="reason">✗ Gmail never uses .xyz or third-party domains</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div class="card">
+    <div class="card-title"> Quick Comparison</div>
+    <table>
+      <thead>
+        <tr><th>Feature</th><th>Legitimate URL</th><th>Phishing URL</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Protocol</td>
+          <td><span class="tag safe">HTTPS ✓</span></td>
+          <td><span class="tag warn">HTTP or fake HTTPS ✗</span></td>
+        </tr>
+        <tr>
+          <td>Domain spelling</td>
+          <td>Exact brand name (google.com)</td>
+          <td>Misspelled (g00gle.com, gooogle.com)</td>
+        </tr>
+        <tr>
+          <td>Subdomains</td>
+          <td>Simple and official (mail.google.com)</td>
+          <td>Brand used as subdomain (google.evil.com)</td>
+        </tr>
+        <tr>
+          <td>Domain extension</td>
+          <td>.com / .org / .gov / .edu</td>
+          <td>Unusual — .xyz, .tk, .cc, .top</td>
+        </tr>
+        <tr>
+          <td>URL length</td>
+          <td>Short and readable</td>
+          <td>Excessively long with random characters</td>
+        </tr>
+        <tr>
+          <td>Hyphens in domain</td>
+          <td>Rare</td>
+          <td>Common (paypal-secure-login.com)</td>
+        </tr>
+        <tr>
+          <td>URL shorteners</td>
+          <td>Rarely used in official comms</td>
+          <td>Used to hide the real destination</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- HOW TO SPOT -->
+  <div class="card">
+    <div class="card-title">💡 How to Spot a Phishing URL</div>
+    <div class="tips-list">
+      <div class="tip"><div class="tip-icon">🔒</div><div>Check for <strong>HTTPS</strong> — but note that HTTPS alone doesn't guarantee safety; it just encrypts the connection.</div></div>
+      <div class="tip"><div class="tip-icon">🔍</div><div>The <strong>real domain</strong> is the part just before the first single slash. In <code>evil.com/paypal</code>, the domain is <code>evil.com</code>, not PayPal.</div></div>
+      <div class="tip"><div class="tip-icon">⚠️</div><div>Be suspicious of <strong>urgency language</strong> in links — "verify now", "account suspended", "click immediately".</div></div>
+      <div class="tip"><div class="tip-icon">📋</div><div>Don't click links in emails. <strong>Type the official URL directly</strong> in your browser or use a saved bookmark.</div></div>
+      <div class="tip"><div class="tip-icon">🖱️</div><div><strong>Hover over any link</strong> before clicking — your browser shows the real destination in the status bar at the bottom.</div></div>
+      <div class="tip"><div class="tip-icon">🔢</div><div>Watch for <strong>numbers replacing letters</strong>: paypa<em>1</em>.com, g<em>00</em>gle.com, amaz<em>0</em>n.com.</div></div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  © 2025 PhishGuard · Educational resource on URL safety
+</footer>
+
+</body>
+</html>

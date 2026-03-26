@@ -1,0 +1,25 @@
+<input type="text" id="urlInput" placeholder="Enter URL">
+<button onclick="checkURL()">Predict</button>
+
+<p id="result"></p>
+
+<script>
+function checkURL() {
+    const url = document.getElementById("urlInput").value;
+
+    fetch("/predict/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify({url: url})
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("result").innerText =
+            "Prediction: " + data.prediction +
+            " Probability: " + data.probability;
+    });
+}
+</script>
