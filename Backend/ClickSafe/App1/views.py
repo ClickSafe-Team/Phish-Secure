@@ -133,7 +133,7 @@ def prediction(request):
         }, status=405)
     
 
-# url = 'https://chatgpt.com/c/69c2bde2-aca4-8323-8012-d3fe821e9b9d'
+# url = 'https://iptv-org.github.io/iptv/index.m3u'
 # extracted_features = extract_features(url)
 # print(extracted_features)
 # del extracted_features["https"]
