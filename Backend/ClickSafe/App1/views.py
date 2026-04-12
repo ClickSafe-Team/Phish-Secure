@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 import json
 import pandas as pd
 import numpy as np
@@ -9,7 +10,7 @@ import re
 import tldextract
 import math
 from urllib.parse import urlparse
-
+from .models import URLCHECK
 
 def shannon_entropy(string):
     prob = [float(string.count(c)) / len(string) for c in dict.fromkeys(list(string))]
@@ -97,11 +98,15 @@ model = joblib.load(model_path)
 def predict_page(request):
   return render(request, 'app1/predict.html')
 
+@csrf_exempt
 def prediction(request):
     if request.method == 'POST':
-        url_dict = json.loads(request.body)
         try:
-            url = url_dict['url']
+            url_dict = json.loads(request.body)
+            url = url_dict.get('url')
+            if not url:
+                return JsonResponse({"error": "Missing url"}, status=400)
+
             extracted_features = extract_features(url)
             if "https" in extracted_features:
                 del extracted_features["https"]
@@ -113,24 +118,30 @@ def prediction(request):
                     result = 'Phishing'
                 else:
                     result = 'Legitimate'
-                URLCHECK.objects.create(
-                    url=url,
-                    prediction=result,
-                    probability=prob
-                )
+                try:
+                    URLCHECK.objects.create(
+                        url=url,
+                        prediction=result,
+                        probability=prob
+                    )
+                except Exception as db_err:
+                    print(f"Database error: {db_err}")
+                    pass
                 return JsonResponse({
                     "url": url,
                     "prediction": result,
                     "Confidence": max(max(prob))
                 })
-            except Exception as e:
-                print('Model Fails')
+            except Exception as model_err:
+                print(f"Model error: {model_err}")
+                return JsonResponse({"error": f"Model failed: {str(model_err)}"}, status=500)
+        except json.JSONDecodeError as json_err:
+            print(f"JSON error: {json_err}")
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
         except Exception as e:
-            print('404!!, URL NOT FOUND')
-    else:
-        return JsonResponse({
-            "error": "Only POST request allowed"
-        }, status=405)
+            print(f"Unexpected error: {e}")
+            return JsonResponse({"error": f"Server error: {str(e)}"}, status=500)
+    return JsonResponse({"error": "Only POST request allowed"}, status=405)
     
 
 # url = 'https://iptv-org.github.io/iptv/index.m3u'
