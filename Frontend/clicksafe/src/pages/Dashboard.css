@@ -1,0 +1,148 @@
+.dashboard-container {
+  text-align: left;
+  animation: fadeIn 0.5s ease-in;
+  width: 100%;
+}
+
+.dashboard-header {
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+.dashboard-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  background: -webkit-linear-gradient(#38bdf8, #818cf8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dashboard-header p {
+  color: #94a3b8;
+  font-size: 1.1rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.stat-card {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+  border-color: #38bdf8;
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+}
+
+.stat-info h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.stat-value {
+  margin: 0.5rem 0 0 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.stat-value.text-danger {
+  color: #ef4444;
+}
+
+.stat-value.text-safe {
+  color: #22c55e;
+}
+
+.recent-activity h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #f8fafc;
+  text-align: left;
+}
+
+.activity-table-container {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  overflow: hidden;
+  overflow-x: auto;
+}
+
+.activity-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  min-width: 600px;
+}
+
+.activity-table th,
+.activity-table td {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #334155;
+}
+
+.activity-table th {
+  background-color: rgba(15, 23, 42, 0.5);
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+.activity-table tr:last-child td {
+  border-bottom: none;
+}
+
+.url-col {
+  color: #cbd5e1;
+  font-family: monospace;
+  font-size: 0.95rem;
+}
+
+.time-col {
+  color: #64748b;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-block;
+  text-align: center;
+}
+
+.badge-safe {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.badge-danger {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}

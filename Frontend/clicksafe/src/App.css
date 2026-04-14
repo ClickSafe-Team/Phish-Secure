@@ -16,7 +16,7 @@ body {
 .app-container {
   width: 100%;
   max-width: 800px;
-  padding: 2rem;
+  padding: 6rem 2rem 2rem 2rem; /* Increased top padding for fixed navbar */
   text-align: center;
 }
 
