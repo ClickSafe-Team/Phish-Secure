@@ -120,9 +120,9 @@ def prediction(request):
                     result = 'Legitimate'
                 try:
                     URLCHECK.objects.create(
-                        url=url,
-                        prediction=result,
-                        probability=prob
+                        URL=url,
+                        Prediction=result,
+                        Probability=float(max(max(prob)))
                     )
                 except Exception as db_err:
                     print(f"Database error: {db_err}")
@@ -157,3 +157,32 @@ def prediction(request):
 #   result = 'Phishing'
 # else:
 #   result = 'Legitimate'
+
+def dashboard_stats(request):
+    if request.method == 'GET':
+        try:
+            total_scans = URLCHECK.objects.count()
+            phishing_count = URLCHECK.objects.filter(Prediction__iexact='Phishing').count()
+            safe_count = URLCHECK.objects.filter(Prediction__iexact='Legitimate').count()
+
+            recent_scans = URLCHECK.objects.all().order_by('-Created_at')[:4]
+            recent_activity = []
+            for scan in recent_scans:
+                recent_activity.append({
+                    "id": scan.id,
+                    "url": scan.URL,
+                    "status": "Safe" if scan.Prediction == 'Legitimate' else "Phishing",
+                    "date": scan.Created_at.strftime("%b %d, %I:%M %p")
+                })
+
+            return JsonResponse({
+                "stats": {
+                    "total": total_scans,
+                    "phishing": phishing_count,
+                    "safe": safe_count
+                },
+                "recent_activity": recent_activity
+            })
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    return JsonResponse({"error": "Only GET request allowed"}, status=405)
